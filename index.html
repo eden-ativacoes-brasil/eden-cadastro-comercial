@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eden PACS — Etapa Comercial</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #0a0a0a; --white: #ffffff; --gray-50: #f9f9f8; --gray-100: #f0f0ee;
+      --gray-200: #e4e4e0; --gray-400: #a0a09a; --gray-600: #6b6b65; --red: #c0392b; --radius: 2px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--gray-50); color: var(--black); min-height: 100vh; padding-bottom: 80px; }
+    .site-header { background: var(--black); padding: 20px 0; position: sticky; top: 0; z-index: 100; }
+    .site-header .inner { max-width: 760px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: 'Sora', sans-serif; font-weight: 300; font-size: 22px; color: var(--white); letter-spacing: 1px; }
+    .header-label { font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-400); }
+    .progress-bar { height: 3px; background: var(--gray-200); position: sticky; top: 62px; z-index: 99; }
+    .progress-fill { height: 100%; background: var(--black); width: 0%; transition: width 0.4s ease; }
+    .form-hero { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 56px 24px 40px; text-align: center; }
+    .form-hero h1 { font-family: 'Sora', sans-serif; font-size: clamp(22px, 4vw, 34px); font-weight: 600; letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 10px; }
+    .form-hero .subtitle { font-family: 'Sora', sans-serif; font-size: 17px; font-weight: 600; color: var(--black); letter-spacing: -0.3px; margin-bottom: 10px; }
+    .form-hero p { font-size: 14px; color: var(--gray-600); max-width: 480px; margin: 0 auto; line-height: 1.6; }
+    .phase-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--black); color: var(--white); font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; margin-bottom: 20px; }
+    .form-wrapper { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+    .section-block { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); margin-top: 28px; overflow: hidden; }
+    .section-header { display: flex; align-items: center; gap: 14px; padding: 22px 28px; border-bottom: 1px solid var(--gray-100); background: var(--gray-50); }
+    .section-number { width: 28px; height: 28px; background: var(--black); color: var(--white); font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 600; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .section-title { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
+    .section-subtitle { font-size: 12px; color: var(--gray-600); margin-top: 2px; }
+    .section-body { padding: 28px; display: flex; flex-direction: column; gap: 22px; }
+    .field-group { display: flex; flex-direction: column; gap: 6px; }
+    .field-group > label { font-size: 13px; font-weight: 500; color: var(--black); }
+    .field-hint { font-size: 11.5px; color: var(--gray-600); }
+    .required-star { color: var(--red); }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select, textarea {
+      width: 100%; padding: 11px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px;
+      color: var(--black); background: var(--white); border: 1px solid var(--gray-200);
+      border-radius: var(--radius); outline: none; transition: border-color 0.18s, box-shadow 0.18s; appearance: none;
+    }
+    input::placeholder, textarea::placeholder { color: var(--gray-400); font-style: italic; font-size: 13px; }
+    input:focus, select:focus, textarea:focus { border-color: var(--black); box-shadow: 0 0 0 3px rgba(10,10,10,0.06); }
+    input.error, select.error, textarea.error { border-color: var(--red); }
+    .error-msg { font-size: 11.5px; color: var(--red); display: none; }
+    .error-msg.visible { display: block; }
+    textarea { resize: vertical; min-height: 80px; }
+    select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230a0a0a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px; cursor: pointer; }
+    .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+    @media (max-width: 560px) { .cols-2, .cols-3 { grid-template-columns: 1fr; } }
+    .radio-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .radio-option { position: relative; }
+    .radio-option input[type="radio"] { position: absolute; opacity: 0; width: 0; }
+    .radio-option label { display: flex; align-items: center; padding: 9px 18px; border: 1px solid var(--gray-200); border-radius: 99px; cursor: pointer; font-size: 13.5px; transition: all 0.15s; user-select: none; }
+    .radio-option input:checked + label { background: var(--black); color: var(--white); border-color: var(--black); }
+    .radio-option label:hover { border-color: var(--black); }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+    .check-option { position: relative; }
+    .check-option input[type="checkbox"] { position: absolute; opacity: 0; }
+    .check-option label { display: flex; align-items: center; gap: 8px; padding: 9px 14px; border: 1px solid var(--gray-200); border-radius: var(--radius); cursor: pointer; font-size: 12.5px; font-weight: 500; transition: all 0.15s; user-select: none; }
+    .check-option label::before { content: ''; width: 14px; height: 14px; border: 1.5px solid #ccc; border-radius: 3px; flex-shrink: 0; transition: all 0.15s; }
+    .check-option input:checked + label { background: var(--black); color: var(--white); border-color: var(--black); }
+    .check-option input:checked + label::before { background: var(--white); border-color: var(--white); }
+    .check-option label:hover { border-color: var(--black); }
+    .vol-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-top: 8px; }
+    .vol-label { font-size: 12px; color: var(--gray-600); margin-bottom: 4px; display: block; }
+    .vol-total { background: var(--gray-50); border: 1px solid var(--gray-200); padding: 11px 14px; font-weight: 600; font-size: 15px; border-radius: var(--radius); }
+    .dynamic-table-wrap { overflow-x: auto; margin-top: 10px; }
+    .dynamic-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 460px; }
+    .dynamic-table th { background: var(--black); color: var(--white); font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; padding: 10px 12px; text-align: left; white-space: nowrap; }
+    .dynamic-table td { padding: 5px 5px; border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+    .dynamic-table tr:last-child td { border-bottom: none; }
+    .dynamic-table input[type="text"], .dynamic-table select { padding: 8px 10px; font-size: 13px; }
+    .btn-remove-row { background: none; border: none; cursor: pointer; color: var(--gray-400); font-size: 18px; line-height: 1; padding: 4px 8px; border-radius: 4px; transition: color 0.15s; }
+    .btn-remove-row:hover { color: var(--red); }
+    .btn-add-row { display: inline-flex; align-items: center; gap: 7px; margin-top: 10px; padding: 9px 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--black); background: var(--white); border: 1.5px dashed var(--gray-200); border-radius: var(--radius); cursor: pointer; transition: all 0.15s; }
+    .btn-add-row:hover { border-color: var(--black); background: var(--gray-50); }
+    .integration-section { max-height: 0; overflow: hidden; transition: max-height 0.8s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease; opacity: 0; }
+    .integration-section.visible { max-height: 5000px; opacity: 1; }
+    .integration-banner { background: var(--black); color: var(--white); padding: 20px 28px; margin-top: 28px; display: flex; align-items: center; gap: 16px; border-radius: var(--radius); }
+    .integration-banner h3 { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 600; }
+    .integration-banner p { font-size: 12.5px; color: rgba(255,255,255,0.6); margin-top: 3px; }
+    .int-num { width: 28px; height: 28px; background: #444; color: var(--white); font-family: 'Sora', sans-serif; font-size: 10px; font-weight: 600; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .field-divider { height: 1px; background: var(--gray-100); margin: 2px 0; }
+    .submit-area { margin-top: 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .submit-note { font-size: 12px; color: var(--gray-600); line-height: 1.5; max-width: 380px; }
+    .btn-submit { background: var(--black); color: var(--white); font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; padding: 14px 36px; border: none; border-radius: var(--radius); cursor: pointer; transition: background 0.15s, transform 0.1s; }
+    .btn-submit:hover { background: #222; }
+    .btn-submit:active { transform: scale(0.98); }
+    .success-screen { display: none; flex-direction: column; align-items: center; text-align: center; padding: 80px 24px; gap: 20px; }
+    .success-screen.visible { display: flex; }
+    .success-icon { width: 64px; height: 64px; background: var(--black); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .success-screen h2 { font-family: 'Sora', sans-serif; font-size: 26px; font-weight: 600; }
+    .success-screen p { color: var(--gray-600); max-width: 400px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <span class="logo">eden</span>
+    <span class="header-label">Etapa Comercial</span>
+  </div>
+</header>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="form-hero">
+  <div class="phase-badge">⚡ Fase Comercial</div>
+  <h1>Solicitação de Cadastro</h1>
+  <p class="subtitle">Eden PACS</p>
+  <p>Preencha os dados abaixo para que nossa equipe comercial possa dar continuidade à proposta.</p>
+</div>
+
+<div class="form-wrapper" id="formWrapper">
+<form id="mainForm" novalidate>
+
+  <!-- 1. IDENTIFICAÇÃO -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <div><div class="section-title">Identificação da Unidade</div><div class="section-subtitle">Dados gerais da organização</div></div>
+    </div>
+    <div class="section-body">
+      <div class="field-group">
+        <label>Nome da Organização / Filial <span class="required-star">*</span></label>
+        <input type="text" id="nomeOrg" placeholder="Ex.: Hospital Santa Clara — Unidade Centro" />
+        <span class="error-msg" id="err-nomeOrg">Campo obrigatório.</span>
+      </div>
+      <div class="cols-2">
+        <div class="field-group">
+          <label>CNPJ <span class="required-star">*</span></label>
+          <input type="text" id="cnpjCliente" placeholder="00.000.000/0000-00" maxlength="18" />
+          <span class="error-msg" id="err-cnpjCliente">Campo obrigatório.</span>
+        </div>
+        <div class="field-group">
+          <label>ID da Unidade</label>
+          <input type="text" id="idUnidade" placeholder="Se já existir" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Endereço <span class="required-star">*</span></label>
+        <input type="text" id="endereco" placeholder="Rua, número, complemento" />
+        <span class="error-msg" id="err-endereco">Campo obrigatório.</span>
+      </div>
+      <div class="cols-2">
+        <div class="field-group">
+          <label>Cidade <span class="required-star">*</span></label>
+          <input type="text" id="cidade" placeholder="Ex.: São Paulo" />
+          <span class="error-msg" id="err-cidade">Obrigatório.</span>
+        </div>
+        <div class="field-group">
+          <label>Estado <span class="required-star">*</span></label>
+          <select id="estado">
+            <option value="">Selecione...</option>
+            <option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option><option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option><option>MT</option><option>MS</option><option>MG</option><option>PA</option><option>PB</option><option>PR</option><option>PE</option><option>PI</option><option>RJ</option><option>RN</option><option>RS</option><option>RO</option><option>RR</option><option>SC</option><option>SP</option><option>SE</option><option>TO</option>
+          </select>
+          <span class="error-msg" id="err-estado">Obrigatório.</span>
+        </div>
+      </div>
+      <div class="field-group" style="max-width:200px">
+        <label>CEP <span class="required-star">*</span></label>
+        <input type="text" id="cep" placeholder="00000-000" maxlength="9" />
+        <span class="error-msg" id="err-cep">CEP inválido.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. RESPONSÁVEL -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <div><div class="section-title">Responsável pela Unidade</div><div class="section-subtitle">Contato principal para a negociação</div></div>
+    </div>
+    <div class="section-body">
+      <div class="field-group">
+        <label>Nome completo <span class="required-star">*</span></label>
+        <div class="cols-2">
+          <div><input type="text" id="respNome" placeholder="Nome" /><span class="error-msg" id="err-respNome">Obrigatório.</span></div>
+          <div><input type="text" id="respSobrenome" placeholder="Sobrenome" /><span class="error-msg" id="err-respSobrenome">Obrigatório.</span></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>E-mail <span class="required-star">*</span></label>
+        <input type="email" id="respEmail" placeholder="exemplo@empresa.com" />
+        <span class="error-msg" id="err-respEmail">Informe um e-mail válido.</span>
+      </div>
+      <div class="field-group">
+        <label>Telefone / WhatsApp <span class="required-star">*</span></label>
+        <input type="tel" id="respTelefone" placeholder="(00) 00000-0000" maxlength="15" />
+        <span class="error-msg" id="err-respTelefone">Campo obrigatório.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. MODALIDADES & VOLUMETRIA -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <div><div class="section-title">Modalidades e Volumetria</div><div class="section-subtitle">Exames realizados e volume mensal estimado</div></div>
+    </div>
+    <div class="section-body">
+      <div class="field-group">
+        <label>Modalidades utilizadas <span class="required-star">*</span></label>
+        <div class="checkbox-grid" id="modalidadesGroup">
+          <div class="check-option"><input type="checkbox" id="mod-ct" value="CT"><label for="mod-ct">CT – Tomografia</label></div>
+          <div class="check-option"><input type="checkbox" id="mod-cr" value="CR"><label for="mod-cr">CR – Raio X</label></div>
+          <div class="check-option"><input type="checkbox" id="mod-ma" value="MA"><label for="mod-ma">MA – Mamógrafo</label></div>
+          <div class="check-option"><input type="checkbox" id="mod-do" value="DO"><label for="mod-do">DO – Densitometria</label></div>
+          <div class="check-option"><input type="checkbox" id="mod-mn" value="MN"><label for="mod-mn">MN – Med. Nuclear</label></div>
+          <div class="check-option"><input type="checkbox" id="mod-mr" value="MR"><label for="mod-mr">MR – Ressonância</label></div>
+          <div class="check-option"><input type="checkbox" id="mod-xa" value="XA"><label for="mod-xa">XA – Hemodinâmica</label></div>
+          <div class="check-option"><input type="checkbox" id="mod-us" value="US"><label for="mod-us">US – Ultrassom</label></div>
+          <div class="check-option"><input type="checkbox" id="mod-cl" value="CL"><label for="mod-cl">CL – Colonoscopia</label></div>
+          <div class="check-option"><input type="checkbox" id="mod-es" value="ES"><label for="mod-es">ES – Endoscopia</label></div>
+          <div class="check-option"><input type="checkbox" id="mod-mg" value="MG"><label for="mod-mg">Métodos Gráficos</label></div>
+          <div class="check-option"><input type="checkbox" id="mod-out" value="Outros"><label for="mod-out">Outros</label></div>
+        </div>
+        <span class="error-msg" id="err-modalidades">Selecione ao menos uma modalidade.</span>
+      </div>
+      <div class="field-divider"></div>
+      <div class="field-group">
+        <label>Volumetria mensal por modalidade <span class="required-star">*</span></label>
+        <span class="field-hint">Preencha apenas as modalidades ativas</span>
+        <div class="vol-grid">
+          <div class="field-group"><span class="vol-label">CT – Tomografia</span><input type="number" id="volCT" min="0" placeholder="0" data-vol /></div>
+          <div class="field-group"><span class="vol-label">CR – Raio X</span><input type="number" id="volCR" min="0" placeholder="0" data-vol /></div>
+          <div class="field-group"><span class="vol-label">MA – Mamógrafo</span><input type="number" id="volMA" min="0" placeholder="0" data-vol /></div>
+          <div class="field-group"><span class="vol-label">DO – Densitometria</span><input type="number" id="volDO" min="0" placeholder="0" data-vol /></div>
+          <div class="field-group"><span class="vol-label">MN – Med. Nuclear</span><input type="number" id="volMN" min="0" placeholder="0" data-vol /></div>
+          <div class="field-group"><span class="vol-label">MR – Ressonância</span><input type="number" id="volMR" min="0" placeholder="0" data-vol /></div>
+          <div class="field-group"><span class="vol-label">XA – Hemodinâmica</span><input type="number" id="volXA" min="0" placeholder="0" data-vol /></div>
+          <div class="field-group"><span class="vol-label">US – Ultrassom</span><input type="number" id="volUS" min="0" placeholder="0" data-vol /></div>
+          <div class="field-group"><span class="vol-label">CL – Colonoscopia</span><input type="number" id="volCL" min="0" placeholder="0" data-vol /></div>
+          <div class="field-group"><span class="vol-label">ES – Endoscopia</span><input type="number" id="volES" min="0" placeholder="0" data-vol /></div>
+          <div class="field-group"><span class="vol-label">Métodos Gráficos</span><input type="number" id="volMG" min="0" placeholder="0" data-vol /></div>
+          <div class="field-group"><span class="vol-label">Outros</span><input type="number" id="volOut" min="0" placeholder="0" data-vol /></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Volumetria total / mês</label>
+        <div class="vol-total" id="volTotal">0 exames/mês</div>
+        <span class="field-hint">Calculado automaticamente.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. INTEGRAÇÃO -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <div><div class="section-title">Integração com Sistemas Externos</div><div class="section-subtitle">A unidade precisará se integrar a outros sistemas?</div></div>
+    </div>
+    <div class="section-body">
+      <div class="field-group">
+        <label>O cliente fará uso de integração? <span class="required-star">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="integracao" id="integ-sim" value="Sim"><label for="integ-sim">Sim</label></div>
+          <div class="radio-option"><input type="radio" name="integracao" id="integ-nao" value="Não"><label for="integ-nao">Não</label></div>
+        </div>
+        <span class="error-msg" id="err-integracao">Seleção obrigatória.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO CONDICIONAL DE INTEGRAÇÃO -->
+  <div class="integration-section" id="integrationSection">
+    <div class="integration-banner">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div><h3>Dados de Integração</h3><p>Informações preliminares para análise comercial e técnica.</p></div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-header">
+        <div class="int-num" style="background:#333">4</div>
+        <div><div class="section-title">Detalhes da Integração</div><div class="section-subtitle">Tipo, sistema e protocolo</div></div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <span class="field-hint">Adicione uma linha para cada integração necessária</span>
+          <div class="dynamic-table-wrap">
+            <table class="dynamic-table">
+              <thead><tr><th style="width:34%">Tipo de integração</th><th>Sistema integrado</th><th style="width:26%">Versão</th><th style="width:38px"></th></tr></thead>
+              <tbody id="integBody">
+                <tr>
+                  <td><select class="integ-tipo" style="width:100%"><option value="">Selecione...</option><option>RIS / HIS / EMR</option><option>Arquitetura da integração</option><option>Laudo e Imagem</option><option>Dados demográficos do paciente</option><option>Worklist</option><option>Outros</option></select></td>
+                  <td><input type="text" class="integ-sistema" placeholder="Ex.: MV, Tasy, Pixeon..." style="width:100%" /></td>
+                  <td><input type="text" class="integ-versao" placeholder="Ex.: Soul, v3.2..." style="width:100%" /></td>
+                  <td style="text-align:center"><button type="button" class="btn-remove-row">×</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <button type="button" class="btn-add-row" id="addInteg">
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Adicionar integração
+          </button>
+          <span class="error-msg" id="err-integTable">Informe ao menos um tipo.</span>
+        </div>
+        <div class="field-divider"></div>
+        <div class="field-group">
+          <label>Direção do fluxo <span class="required-star">*</span></label>
+          <select id="intFluxo"><option value="">Selecione...</option><option>Unidirecional (envio)</option><option>Unidirecional (recebimento)</option><option>Bidirecional</option></select>
+          <span class="error-msg" id="err-intFluxo">Obrigatório.</span>
+        </div>
+        <div class="field-group">
+          <label>Padrão / Protocolo <span class="required-star">*</span></label>
+          <input type="text" id="intProtocolo" placeholder="Ex.: HL7 v2.x, FHIR, API REST, DICOM MWL..." list="protocoloList" />
+          <datalist id="protocoloList"><option value="HL7 v2.x"></option><option value="HL7 FHIR"></option><option value="API REST"></option><option value="DICOM MWL"></option><option value="DICOM MPPS"></option><option value="Webservice SOAP"></option></datalist>
+          <span class="error-msg" id="err-intProtocolo">Obrigatório.</span>
+        </div>
+        <div class="field-group">
+          <label>Terá retorno de laudo? <span class="required-star">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option"><input type="radio" name="retornoLaudo" id="laudo-sim" value="Sim"><label for="laudo-sim">Sim</label></div>
+            <div class="radio-option"><input type="radio" name="retornoLaudo" id="laudo-nao" value="Não"><label for="laudo-nao">Não</label></div>
+          </div>
+          <span class="error-msg" id="err-retornoLaudo">Obrigatório.</span>
+          <div id="laudoFormatoArea" style="max-height:0;overflow:hidden;opacity:0;transition:max-height 0.4s ease,opacity 0.3s ease;margin-top:0">
+            <div style="margin-top:12px">
+              <label style="font-size:12.5px;font-weight:500;display:block;margin-bottom:6px">Qual formato requerido?</label>
+              <input type="text" id="laudoFormato" placeholder="Ex.: Base64, PDF, HL7, XML..." list="laudoFormatoList" />
+              <datalist id="laudoFormatoList"><option value="Base64"></option><option value="PDF"></option><option value="HL7"></option><option value="XML"></option><option value="JSON"></option><option value="RTF"></option></datalist>
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Observações adicionais</label>
+          <textarea id="intObservacoes" rows="3" placeholder="Informações relevantes para a fase comercial..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-area">
+    <div class="submit-note">Ao enviar, nossa equipe comercial receberá as informações e entrará em contato. Campos com <span class="required-star">*</span> são obrigatórios.</div>
+    <button type="submit" class="btn-submit">Enviar →</button>
+  </div>
+
+</form>
+
+<div class="success-screen" id="successScreen">
+  <div class="success-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <h2>Solicitação enviada!</h2>
+  <p>Nossa equipe comercial entrará em contato em breve para dar continuidade à proposta.</p>
+  <p style="font-size:12px;color:var(--gray-400);margin-top:6px">Eden Cloud PACS — edenmed.com</p>
+</div>
+</div>
+
+<script>
+  function maskPhone(el){el.addEventListener('input',function(){let v=this.value.replace(/\D/g,'').slice(0,11);if(v.length>6)v='('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);else if(v.length>2)v='('+v.slice(0,2)+') '+v.slice(2);else if(v.length>0)v='('+v;this.value=v;});}
+  function maskCNPJ(el){el.addEventListener('input',function(){let v=this.value.replace(/\D/g,'').slice(0,14);if(v.length>12)v=v.slice(0,2)+'.'+v.slice(2,5)+'.'+v.slice(5,8)+'/'+v.slice(8,12)+'-'+v.slice(12);else if(v.length>8)v=v.slice(0,2)+'.'+v.slice(2,5)+'.'+v.slice(5,8)+'/'+v.slice(8);else if(v.length>5)v=v.slice(0,2)+'.'+v.slice(2,5)+'.'+v.slice(5);else if(v.length>2)v=v.slice(0,2)+'.'+v.slice(2);this.value=v;});}
+  maskPhone(document.getElementById('respTelefone'));
+  document.getElementById('cep').addEventListener('input',function(){let v=this.value.replace(/\D/g,'').slice(0,8);if(v.length>5)v=v.slice(0,5)+'-'+v.slice(5);this.value=v;});
+  maskCNPJ(document.getElementById('cnpjCliente'));
+  document.querySelectorAll('[data-vol]').forEach(i=>i.addEventListener('input',()=>{let t=0;document.querySelectorAll('[data-vol]').forEach(x=>t+=parseInt(x.value)||0);document.getElementById('volTotal').textContent=t.toLocaleString('pt-BR')+' exames/mês';}));
+  function integRowHTML(){return`<tr><td><select class="integ-tipo" style="width:100%"><option value="">Selecione...</option><option>RIS / HIS / EMR</option><option>Arquitetura da integração</option><option>Laudo e Imagem</option><option>Dados demográficos do paciente</option><option>Worklist</option><option>Outros</option></select></td><td><input type="text" class="integ-sistema" placeholder="Ex.: MV, Tasy..." style="width:100%"/></td><td><input type="text" class="integ-versao" placeholder="Ex.: Soul..." style="width:100%"/></td><td style="text-align:center"><button type="button" class="btn-remove-row">×</button></td></tr>`;}
+  function bindRemove(){document.querySelectorAll('.btn-remove-row').forEach(btn=>{btn.onclick=function(){const rows=this.closest('tbody').querySelectorAll('tr');if(rows.length>1)this.closest('tr').remove();};});}
+  document.getElementById('addInteg').addEventListener('click',()=>{document.getElementById('integBody').insertAdjacentHTML('beforeend',integRowHTML());bindRemove();});
+  bindRemove();
+  document.querySelectorAll('input[name="integracao"]').forEach(r=>{r.addEventListener('change',function(){const s=document.getElementById('integrationSection');if(this.value==='Sim'){s.classList.add('visible');setTimeout(()=>s.scrollIntoView({behavior:'smooth',block:'start'}),200);}else s.classList.remove('visible');});});
+  document.querySelectorAll('input[name="retornoLaudo"]').forEach(r=>{r.addEventListener('change',function(){const a=document.getElementById('laudoFormatoArea');if(this.value==='Sim'){a.style.maxHeight='120px';a.style.opacity='1';a.style.marginTop='12px';}else{a.style.maxHeight='0';a.style.opacity='0';a.style.marginTop='0';document.getElementById('laudoFormato').value='';}});});
+  function updateProgress(){const f=document.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]),select,textarea');let filled=0;f.forEach(x=>{if(x.value.trim())filled++;});document.getElementById('progressFill').style.width=Math.min(100,Math.round(filled/f.length*100))+'%';}
+  document.getElementById('mainForm').addEventListener('input',updateProgress);
+  document.getElementById('mainForm').addEventListener('change',updateProgress);
+  function showErr(id,show){const e=document.getElementById('err-'+id);if(e)e.classList.toggle('visible',show);}
+  function markField(id,isErr){const e=document.getElementById(id);if(e)e.classList.toggle('error',isErr);}
+  function req(id){const e=document.getElementById(id);const empty=!e||!e.value.trim();markField(id,empty);showErr(id,empty);return!empty;}
+  function reqRadio(name,errId){const c=document.querySelector('input[name="'+name+'"]:checked');const e=document.getElementById('err-'+errId);if(e)e.classList.toggle('visible',!c);return!!c;}
+  function reqEmail(id){const e=document.getElementById(id);const ok=e&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.value);markField(id,!ok);showErr(id,!ok);return ok;}
+  document.getElementById('mainForm').addEventListener('submit',async function(e){
+    e.preventDefault();let ok=true;
+    const integSim=document.querySelector('input[name="integracao"]:checked')?.value==='Sim';
+    if(!req('nomeOrg'))ok=false;if(!req('cnpjCliente'))ok=false;
+    if(!req('endereco'))ok=false;if(!req('cidade'))ok=false;if(!req('estado'))ok=false;if(!req('cep'))ok=false;
+    if(!req('respNome'))ok=false;if(!req('respSobrenome'))ok=false;if(!reqEmail('respEmail'))ok=false;if(!req('respTelefone'))ok=false;
+    const modOk=!!document.querySelector('#modalidadesGroup input:checked');showErr('modalidades',!modOk);if(!modOk)ok=false;
+    if(!reqRadio('integracao','integracao'))ok=false;
+    if(integSim){
+      const integOk=[...document.querySelectorAll('#integBody tr')].some(r=>r.querySelector('.integ-tipo')?.value);showErr('integTable',!integOk);if(!integOk)ok=false;
+      if(!req('intFluxo'))ok=false;if(!req('intProtocolo'))ok=false;if(!reqRadio('retornoLaudo','retornoLaudo'))ok=false;
+    }
+    if(!ok){document.querySelector('.error-msg.visible')?.scrollIntoView({behavior:'smooth',block:'center'});return;}
+    const btn=document.querySelector('.btn-submit');btn.textContent='Enviando...';btn.disabled=true;
+    const formData=new FormData();
+    const fields={
+      'Nome da Organização/Filial':document.getElementById('nomeOrg')?.value,
+      'CNPJ':document.getElementById('cnpjCliente')?.value,
+      'ID da Unidade':document.getElementById('idUnidade')?.value,
+      'Endereço':document.getElementById('endereco')?.value,
+      'Cidade':document.getElementById('cidade')?.value,
+      'Estado':document.getElementById('estado')?.value,
+      'CEP':document.getElementById('cep')?.value,
+      'Nome do Responsável':(document.getElementById('respNome')?.value||'')+' '+(document.getElementById('respSobrenome')?.value||''),
+      'E-mail do Responsável':document.getElementById('respEmail')?.value,
+      'Telefone do Responsável':document.getElementById('respTelefone')?.value,
+      'Modalidades':[...document.querySelectorAll('#modalidadesGroup input:checked')].map(x=>x.value).join(', '),
+      'Usa integração':document.querySelector('input[name="integracao"]:checked')?.value,
+    };
+    document.querySelectorAll('[data-vol]').forEach(i=>{const v=i.value;if(v&&v!=='0')fields['Vol. '+i.id.replace('vol','')]=v+' exames/mês';});
+    if(integSim){
+      document.querySelectorAll('#integBody tr').forEach((tr,i)=>{const tipo=tr.querySelector('.integ-tipo')?.value;const sis=tr.querySelector('.integ-sistema')?.value;const ver=tr.querySelector('.integ-versao')?.value;if(tipo)fields[`Integração ${i+1}`]=`${tipo} | ${sis||'-'} | ${ver||'-'}`;});
+      fields['Fluxo']=document.getElementById('intFluxo')?.value;
+      fields['Protocolo']=document.getElementById('intProtocolo')?.value;
+      fields['Retorno de laudo']=document.querySelector('input[name="retornoLaudo"]:checked')?.value;
+      fields['Formato do laudo']=document.getElementById('laudoFormato')?.value;
+      fields['Observações']=document.getElementById('intObservacoes')?.value;
+    }
+    Object.entries(fields).forEach(([k,v])=>{if(v)formData.set(k,v);});
+    try{
+      const res=await fetch('https://formspree.io/f/mwvyjkno',{method:'POST',body:formData,headers:{'Accept':'application/json'}});
+      if(res.ok){document.getElementById('mainForm').style.display='none';document.getElementById('successScreen').classList.add('visible');window.scrollTo({top:0,behavior:'smooth'});document.getElementById('progressFill').style.width='100%';}
+      else{btn.textContent='Enviar →';btn.disabled=false;alert('Erro ao enviar. Tente novamente.');}
+    }catch(err){btn.textContent='Enviar →';btn.disabled=false;alert('Erro de conexão. Tente novamente.');}
+  });
+</script>
+</body>
+</html>
