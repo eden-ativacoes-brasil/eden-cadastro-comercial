@@ -135,8 +135,10 @@
           <span class="error-msg" id="err-cnpjCliente">Campo obrigatório.</span>
         </div>
         <div class="field-group">
-          <label>ID da Unidade</label>
-          <input type="text" id="idUnidade" placeholder="Se já existir" />
+          <label>Quantidade de filiais <span class="required-star">*</span></label>
+          <input type="number" id="qtdFiliais" min="1" placeholder="Ex.: 3" />
+          <span class="field-hint">Inclua a unidade principal.</span>
+          <span class="error-msg" id="err-qtdFiliais">Campo obrigatório.</span>
         </div>
       </div>
       <div class="field-group">
@@ -333,6 +335,51 @@
     </div>
   </div>
 
+  <!-- 5. MIGRAÇÃO DE LEGADO -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <div><div class="section-title">Migração de Legado</div><div class="section-subtitle">Imagens e dados de sistemas anteriores</div></div>
+    </div>
+    <div class="section-body">
+      <div class="field-group">
+        <label>O cliente deseja realizar migração de imagens legadas? <span class="required-star">*</span></label>
+        <span class="field-hint">Migração de PACS legados como GE, Webkriativa, Medilab, Carestream, Vivace, RN Tecnologia, entre outros</span>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="migLegado" id="mig-sim" value="Sim"><label for="mig-sim">Sim</label></div>
+          <div class="radio-option"><input type="radio" name="migLegado" id="mig-nao" value="Não"><label for="mig-nao">Não</label></div>
+          <div class="radio-option"><input type="radio" name="migLegado" id="mig-avaliacao" value="Em avaliação"><label for="mig-avaliacao">Em avaliação</label></div>
+        </div>
+        <span class="error-msg" id="err-migLegado">Seleção obrigatória.</span>
+        <div id="migDetalhesArea" style="max-height:0;overflow:hidden;opacity:0;transition:max-height 0.4s ease,opacity 0.3s ease;">
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:14px;">
+            <div class="field-group">
+              <label style="font-size:12.5px;font-weight:500">Sistema legado atual</label>
+              <input type="text" id="migSistema" placeholder="Ex.: GE Centricity, Carestream Vue, Webkriativa..." list="migSistemaList" />
+              <datalist id="migSistemaList">
+                <option value="GE Centricity"></option>
+                <option value="Carestream Vue"></option>
+                <option value="Webkriativa"></option>
+                <option value="Medilab"></option>
+                <option value="Vivace"></option>
+                <option value="RN Tecnologia"></option>
+                <option value="Outro"></option>
+              </datalist>
+            </div>
+            <div class="field-group">
+              <label style="font-size:12.5px;font-weight:500">Volume estimado de imagens</label>
+              <input type="text" id="migVolume" placeholder="Ex.: 450 TB, 2 milhões de estudos..." />
+            </div>
+            <div class="field-group">
+              <label style="font-size:12.5px;font-weight:500">Observações adicionais</label>
+              <textarea id="migObservacoes" rows="2" placeholder="Período de retenção, prioridades, restrições de janela de migração..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="submit-area">
     <div class="submit-note">Ao enviar, nossa equipe comercial receberá as informações e entrará em contato. Campos com <span class="required-star">*</span> são obrigatórios.</div>
     <button type="submit" class="btn-submit">Enviar →</button>
@@ -360,6 +407,7 @@
   document.getElementById('addInteg').addEventListener('click',()=>{document.getElementById('integBody').insertAdjacentHTML('beforeend',integRowHTML());bindRemove();});
   bindRemove();
   document.querySelectorAll('input[name="integracao"]').forEach(r=>{r.addEventListener('change',function(){const s=document.getElementById('integrationSection');if(this.value==='Sim'){s.classList.add('visible');setTimeout(()=>s.scrollIntoView({behavior:'smooth',block:'start'}),200);}else s.classList.remove('visible');});});
+  document.querySelectorAll('input[name="migLegado"]').forEach(r=>{r.addEventListener('change',function(){const a=document.getElementById('migDetalhesArea');if(this.value==='Sim'){a.style.maxHeight='400px';a.style.opacity='1';a.style.marginTop='12px';}else{a.style.maxHeight='0';a.style.opacity='0';a.style.marginTop='0';}});});
   document.querySelectorAll('input[name="retornoLaudo"]').forEach(r=>{r.addEventListener('change',function(){const a=document.getElementById('laudoFormatoArea');if(this.value==='Sim'){a.style.maxHeight='120px';a.style.opacity='1';a.style.marginTop='12px';}else{a.style.maxHeight='0';a.style.opacity='0';a.style.marginTop='0';document.getElementById('laudoFormato').value='';}});});
   function updateProgress(){const f=document.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]),select,textarea');let filled=0;f.forEach(x=>{if(x.value.trim())filled++;});document.getElementById('progressFill').style.width=Math.min(100,Math.round(filled/f.length*100))+'%';}
   document.getElementById('mainForm').addEventListener('input',updateProgress);
@@ -373,6 +421,7 @@
     e.preventDefault();let ok=true;
     const integSim=document.querySelector('input[name="integracao"]:checked')?.value==='Sim';
     if(!req('nomeOrg'))ok=false;if(!req('cnpjCliente'))ok=false;
+    if(!req('qtdFiliais'))ok=false;
     if(!req('endereco'))ok=false;if(!req('cidade'))ok=false;if(!req('estado'))ok=false;if(!req('cep'))ok=false;
     if(!req('respNome'))ok=false;if(!req('respSobrenome'))ok=false;if(!reqEmail('respEmail'))ok=false;if(!req('respTelefone'))ok=false;
     const modOk=!!document.querySelector('#modalidadesGroup input:checked');showErr('modalidades',!modOk);if(!modOk)ok=false;
@@ -381,6 +430,7 @@
       const integOk=[...document.querySelectorAll('#integBody tr')].some(r=>r.querySelector('.integ-tipo')?.value);showErr('integTable',!integOk);if(!integOk)ok=false;
       if(!req('intFluxo'))ok=false;if(!req('intProtocolo'))ok=false;if(!reqRadio('retornoLaudo','retornoLaudo'))ok=false;
     }
+    if(!reqRadio('migLegado','migLegado'))ok=false;
     if(!ok){document.querySelector('.error-msg.visible')?.scrollIntoView({behavior:'smooth',block:'center'});return;}
     const btn=document.querySelector('.btn-submit');btn.textContent='Enviando...';btn.disabled=true;
     const formData=new FormData();
@@ -395,8 +445,13 @@
       'Nome do Responsável':(document.getElementById('respNome')?.value||'')+' '+(document.getElementById('respSobrenome')?.value||''),
       'E-mail do Responsável':document.getElementById('respEmail')?.value,
       'Telefone do Responsável':document.getElementById('respTelefone')?.value,
-      'Modalidades':[...document.querySelectorAll('#modalidadesGroup input:checked')].map(x=>x.value).join(', '),
+      'Quantidade de filiais':document.getElementById('qtdFiliais')?.value,
       'Usa integração':document.querySelector('input[name="integracao"]:checked')?.value,
+      'Migração de legado':document.querySelector('input[name="migLegado"]:checked')?.value,
+      'Sistema legado':document.getElementById('migSistema')?.value,
+      'Volume legado':document.getElementById('migVolume')?.value,
+      'Obs. migração':document.getElementById('migObservacoes')?.value,
+      'Modalidades':[...document.querySelectorAll('#modalidadesGroup input:checked')].map(x=>x.value).join(', '),
     };
     document.querySelectorAll('[data-vol]').forEach(i=>{const v=i.value;if(v&&v!=='0')fields['Vol. '+i.id.replace('vol','')]=v+' exames/mês';});
     if(integSim){
